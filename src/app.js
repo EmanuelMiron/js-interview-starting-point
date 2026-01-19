@@ -40,7 +40,7 @@ async function fetchWithRetry(url, options, retries = 3) {
 function calculateDistance(lat1, lng1, lat2, lng2) {
   const dx = lat2 - lat1;
   const dy = lng2 - lng1;
-  return Math.sqrt(dx * dx + dy * dy);
+  return Math.sqrt(dx ** 2 + dy ** 2);
 }
 
 /**
