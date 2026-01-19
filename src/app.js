@@ -44,18 +44,28 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
 }
 
 /**
+ * Create request options object with default headers
+ * @param {string} method
+ * @param {Object} additionalHeaders
+ * @returns {Object}
+ */
+function createRequestOptions(method = 'GET', additionalHeaders = {}) {
+  return {
+    method,
+    headers: {
+      'Accept': 'application/json',
+      ...additionalHeaders
+    }
+  };
+}
+
+/**
  * Fetch authentication token from API
  * @returns {string} - Authentication token
  */
 async function fetchAuthToken() {
   const url = 'https://api-challenge.agilefreaks.com/v1/tokens';
-  const options = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json'
-    }
-  };
-  const data = await fetchWithRetry(url, options);
+  const data = await fetchWithRetry(url, createRequestOptions('POST'));
   if (!data.token) {
     throw new Error('No token in response');
   }
@@ -69,13 +79,7 @@ async function fetchAuthToken() {
  */
 async function fetchCoffeeShops(token) {
   const url = `https://api-challenge.agilefreaks.com/v1/coffee_shops?token=${token}`;
-  const options = {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json'
-    }
-  };
-  return fetchWithRetry(url, options);
+  return fetchWithRetry(url, createRequestOptions());
 }
 
 /**
