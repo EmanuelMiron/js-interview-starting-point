@@ -13,14 +13,13 @@ async function fetchWithRetry(url, options, retries = 3) {
       const isServerError = res.status >= 500;
       const err = new Error(isServerError ? `Server Error: ${res.status}` : `HTTP Error: ${res.status}`);
       err.status = res.status;
+      err.isServerError = isServerError;
       throw err;
     }
 
     return await res.json();
   } catch (err) {
-    const isServerError = err.status >= 500;
-
-    if (isServerError && retries > 0) {
+    if (err.isServerError && retries > 0) {
       console.warn(`Retrying... attempts left: ${retries}`);
       await new Promise(resolve => setTimeout(resolve, 500));
       return fetchWithRetry(url, options, retries - 1);
